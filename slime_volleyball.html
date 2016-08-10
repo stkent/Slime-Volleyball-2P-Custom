@@ -165,6 +165,7 @@
 
         var MAX_VELOCITY_X = 15;
         var MAX_VELOCITY_Y = 22;
+
         function collisionBallSlime(s) {
             var dx = 2 * (ball.x - s.x);
             var dy = ball.y - s.y;
@@ -189,6 +190,7 @@
                 }
             }
         }
+
         var FUDGE = 5; // not sure why this is needed
 
         function updateBall() {
@@ -282,7 +284,6 @@
             renderPoints(slimeRightScore, viewWidth - 30, -40);
         }
 
-
         // GAME CODE
         function renderGame() {
             if (updatesToPaint == 0) {
@@ -332,11 +333,13 @@
             menuDiv.style.display = 'block';
             canvas.style.display = 'none';
         }
+
         function startNextPoint() {
             initRound(leftWon);
             updatesToPaint = 0;
             gameState = GAME_STATE_RUNNING;
         }
+
         function endPoint() {
             if (slimeLeftScore >= WIN_AMOUNT) {
                 endMatch(true);
@@ -356,6 +359,7 @@
                 }
             }, 700);
         }
+
         function initRound(server) {
             ball.x = server ? 200 : 800;
             ball.y = 356;
