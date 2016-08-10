@@ -131,21 +131,21 @@
         var leftWon;
 
         // Game Update Functions
-        function updateSlimeVelocitiesWithKeys(s, left, right, up) {
-            // update velocities
-            if (keysDown[left]) {
-                if (keysDown[right]) {
-                    s.velocityX = 0;
+        function updateSlimeVelocitiesWithKeys(slime, moveLeftKey, moveRightKey, jumpKey) {
+            if (keysDown[moveLeftKey]) {
+                if (keysDown[moveRightKey]) {
+                    slime.velocityX = 0;
                 } else {
-                    s.velocityX = -8;
+                    slime.velocityX = -8;
                 }
-            } else if (keysDown[right]) {
-                s.velocityX = 8;
+            } else if (keysDown[moveRightKey]) {
+                slime.velocityX = 8;
             } else {
-                s.velocityX = 0;
+                slime.velocityX = 0;
             }
-            if (s.y == 0 && keysDown[up]) {
-                s.velocityY = 31;
+
+            if (slime.y == 0 && keysDown[jumpKey]) {
+                slime.velocityY = 31;
             }
         }
 
