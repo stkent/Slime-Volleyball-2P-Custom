@@ -176,11 +176,6 @@
         var slimeRightScore;
         var leftWon;
 
-        var logString;
-        function log(msg) {
-            logString += msg + '\n';
-        }
-
         // Game Update Functions
         function updateSlimeVelocitiesWithKeys(s, left, right, up) {
             // update velocities
@@ -482,14 +477,6 @@
             menuDiv.style.background = "#ca6 url('sky2.jpg') no-repeat";
             contentDiv.appendChild(menuDiv);
 
-            // Create options menu div
-            smallMenuDiv = document.createElement('div');
-            smallMenuDiv.style.position = 'absolute';
-
-
-            // Initialize Logging
-            logString = '';
-
             // Initialize Game Data
             nextSlimeIndex = 0;
             ball = newLegacyBall(25, '#ff0');
@@ -528,42 +515,12 @@
                     'Rewritten by Jonathan Marler</p>' +
                     '</div>';
         }
-        function showOptions() {
-            if (gameState == GAME_STATE_RUNNING) {
-                gameState = GAME_STATE_MENU_PAUSE;
-            } else if (gameState == GAME_STATE_POINT_PAUSE) {
-                gameState = GAME_STATE_MENU_PAUSE_BETWEEN_POINTS;
-            }
-            var div = document.getElementById('OptionsDiv');
-            div.style.display = 'block';
-        }
-        function hideOptions() {
-            var div = document.getElementById('OptionsDiv');
-            div.style.display = 'none';
-            if (gameState == GAME_STATE_MENU_PAUSE) {
-                gameState = GAME_STATE_RUNNING;
-            } else if (gameState == GAME_STATE_MENU_PAUSE_BETWEEN_POINTS) {
-                startNextPoint();
-            }
-        }
     </script>
 </head>
 <body onload="bodyload()" style="text-align:center;">
 
 <div id="ContentDiv" style="position:relative;margin:15px auto;width:750px;">
     <div id="GameContentDiv"></div>
-    <div id="OptionsDiv"
-         style="position:relative;width:400px;height:360px;margin:0 auto;background:#eee;display:none;border:3px solid #ca6;">
-        <h2>Options</h2>
-        <hr/>
-        <br/>
-        <span class="SmallButton" onclick="hideOptions()" style="position:absolute;top:5px;right:5px;font-weight:bold;">close</span>
-        <div style="text-align:left;margin:10px;">
-        </div>
-    </div>
-    <span class="SmallButton" style="position:absolute;top:350px;left:10px;" onclick="showOptions()">
-    Options
-  </span>
 </div>
 </body>
 </html>
