@@ -118,7 +118,6 @@
         var newGroundColor;
         var backTextColor;
         var gameIntervalObject;
-        var endOfPointText;
 
         // GAME DATA
         var gameWidth, gameHeight;
@@ -300,14 +299,6 @@
                 updatesToPaint = 0;
             }
         }
-        function renderEndOfPoint() {
-            var textWidth = ctx.measureText(endOfPointText).width;
-            renderGame();
-            ctx.fillStyle = '#000';
-            ctx.fillText(endOfPointText,
-                    (viewWidth - textWidth) / 2, courtYPix + (viewHeight - courtYPix) / 2);
-        }
-
 
         function gameIteration() {
             if (gameState == GAME_STATE_RUNNING) {
@@ -356,10 +347,8 @@
                 return;
             }
 
-            endOfPointText = 'Player ' + (leftWon ? '1' : '2') + ' scores!';
-
             gameState = GAME_STATE_POINT_PAUSE;
-            requestAnimationFrame(renderEndOfPoint);
+            requestAnimationFrame(renderGame);
 
             setTimeout(function () {
                 if (gameState == GAME_STATE_POINT_PAUSE) {
