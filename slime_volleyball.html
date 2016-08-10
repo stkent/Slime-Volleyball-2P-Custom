@@ -309,7 +309,7 @@
             }
         }
         var FUDGE = 5; // not sure why this is needed
-        // returns true if end of point
+
         function updateBall() {
             ball.velocityY += -1; // gravity
             if (ball.velocityY < -MAX_VELOCITY_Y) {
@@ -354,11 +354,11 @@
                     leftWon = false;
                     slimeRightScore++;
                 }
-                endPoint()
-                return true;
+
+                endPoint();
             }
-            return false;
         }
+
         function updateFrame() {
             if (onePlayer) {
                 slimeAI.move(false); // Move the right slime
@@ -374,15 +374,7 @@
 
             updateSlime(slimeLeft, 50, 445);
             updateSlime(slimeRight, 555, 950);
-
-            // Allows slimes to go accross the net
-            //updateSlime(slimeLeft, 0, 1000);
-            //updateSlime(slimeRight, 0, 1000);
-
-            if (updateBall()) {
-                return;
-            }
-
+            updateBall();
         }
 
         function renderPoints(score, initialX, xDiff) {
@@ -429,9 +421,6 @@
                 }
                 renderBackground();
                 ctx.fillStyle = '#000';
-                //ctx.font = "20px Georgia";
-                //ctx.fillText("Score: " + slimeLeftScore, 140, 20);
-                //ctx.fillText("Score: " + slimeRightScore, viewWidth - 230, 20);
                 ball.render();
                 slimeLeft.render();
                 slimeRight.render();
