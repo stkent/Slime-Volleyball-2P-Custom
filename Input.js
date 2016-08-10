@@ -13,7 +13,6 @@ var keysDown = {};
 
 //noinspection SpellCheckingInspection
 addEventListener("keydown", function (e) {
-    //console.log("keydown '" + e.keyCode + "'");
     if (e.keyCode == KEY_SPACE) {
         spaceKeyDown();
     } else {
@@ -23,6 +22,5 @@ addEventListener("keydown", function (e) {
 
 //noinspection SpellCheckingInspection
 addEventListener("keyup", function (e) {
-    //console.log("keyup   '" + e.keyCode + "'");
     keysDown[e.keyCode] = false;
 }, false);
