@@ -184,12 +184,7 @@
         var slimeLeftScore;
         var slimeRightScore;
         var slimeAI;
-        var updateCount; // RESET every time GAME_STATE_RUNNING is set
         var leftWon;
-        // GAME CHEAT DATA
-        // NOTE: this data should be reloaded every time the
-        //       gameState goes back to GAME_STATE_RUNNING
-        var slowMotion;
 
         var logString;
         function log(msg) {
@@ -454,9 +449,6 @@
 
         function gameIteration() {
             if (gameState == GAME_STATE_RUNNING) {
-                updateCount++;
-                if (slowMotion && (updateCount % 2) == 0)
-                    return;
                 if (updatesToPaint > 0) {
                     console.log("WARNING: updating frame before it was rendered");
                 }
@@ -528,7 +520,6 @@
         function startNextPoint() {
             initRound(leftWon);
             updatesToPaint = 0;
-            updateCount = 0;
             gameState = GAME_STATE_RUNNING;
         }
         function endPoint() {
@@ -718,7 +709,6 @@
             initRound(true);
 
             updatesToPaint = 0;
-            updateCount = 0;
             loadOptions();
             gameState = GAME_STATE_RUNNING
             renderBackground(); // clear the field
@@ -736,7 +726,6 @@
             '</div>';
         }
         function loadOptions() {
-            slowMotion = document.getElementById('SlowMotion').checked;
             if (document.getElementById('PhysicsLog').checked) {
                 physicsLog = 120;
             } else {
@@ -756,7 +745,6 @@
             var div = document.getElementById('OptionsDiv');
             div.style.display = 'none';
             if (gameState == GAME_STATE_MENU_PAUSE) {
-                updateCount = 0;
                 gameState = GAME_STATE_RUNNING;
             } else if (gameState == GAME_STATE_MENU_PAUSE_BETWEEN_POINTS) {
                 startNextPoint();
@@ -778,9 +766,6 @@
         <div style="text-align:left;margin:10px;">
             <h3>Debug Options</h3><br/>
             <input id="PhysicsLog" type="checkbox">Enable Physics Log</input>
-            <br/><br/>
-            <h3>Cheats</h3><br/>
-            <input id="SlowMotion" type="checkbox">Slow Motion</input>
         </div>
     </div>
     <span class="SmallButton" style="position:absolute;top:350px;left:10px;" onclick="showOptions()">
