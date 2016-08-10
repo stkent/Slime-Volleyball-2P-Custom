@@ -87,20 +87,10 @@
                     // it was, so we add 2 pixels here to the radius
                     var radiusPix = this.radius * pixelsPerUnitY + 2;
 
-                    if (ballImage && !legacyGraphics) {
-                        this.rotation += this.velocityX / 100;
-                        this.rotation = this.rotation % TWO_PI;
-
-                        ctx.translate(xPix, yPix);
-                        ctx.rotate(this.rotation);
-                        ctx.drawImage(ballImage, -radiusPix, -radiusPix);
-                        ctx.setTransform(1, 0, 0, 1, 0, 0);
-                    } else {
-                        ctx.fillStyle = legacyBallColor;
-                        ctx.beginPath();
-                        ctx.arc(xPix, yPix, radiusPix, 0, TWO_PI);
-                        ctx.fill();
-                    }
+                    ctx.fillStyle = legacyBallColor;
+                    ctx.beginPath();
+                    ctx.arc(xPix, yPix, radiusPix, 0, TWO_PI);
+                    ctx.fill();
                 }
             };
         }
@@ -119,14 +109,10 @@
                     var yPix = courtYPix - (this.y * pixelsPerUnitY);
                     var radiusPix = this.radius * pixelsPerUnitY;
 
-                    if (this.img && !legacyGraphics) {
-                        ctx.drawImage(this.img, xPix - radiusPix, yPix - 38);
-                    } else {
-                        ctx.fillStyle = this.color;
-                        ctx.beginPath();
-                        ctx.arc(xPix, yPix, radiusPix, Math.PI, TWO_PI);
-                        ctx.fill();
-                    }
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(xPix, yPix, radiusPix, Math.PI, TWO_PI);
+                    ctx.fill();
 
                     // Draw Eyes
                     var eyeX = this.x + (this.onLeft ? 1 : -1) * this.radius / 4;
@@ -188,7 +174,6 @@
         var endOfPointText;
         var greenSlimeImage;
         var redSlimeImage;
-        var legacyGraphics;
 
 
         // GAME DATA
@@ -427,14 +412,9 @@
 
         // Rendering Functions
         function renderBackground() {
-            if (legacyGraphics) {
-                ctx.fillStyle = legacySkyColor;
-                ctx.fillRect(0, 0, viewWidth, courtYPix);
-                ctx.fillStyle = legacyGroundColor;
-            } else {
-                ctx.drawImage(backImage, 0, 0);
-                ctx.fillStyle = newGroundColor;
-            }
+            ctx.fillStyle = legacySkyColor;
+            ctx.fillRect(0, 0, viewWidth, courtYPix);
+            ctx.fillStyle = legacyGroundColor;
             ctx.fillRect(0, courtYPix, viewWidth, viewHeight - courtYPix);
             ctx.fillStyle = '#fff'
             ctx.fillRect(viewWidth / 2 - 2, 7 * viewHeight / 10, 4, viewHeight / 10 + 5);
@@ -756,7 +736,6 @@
             '</div>';
         }
         function loadOptions() {
-            legacyGraphics = document.getElementById('LegacyGraphics').checked;
             slowMotion = document.getElementById('SlowMotion').checked;
             if (document.getElementById('PhysicsLog').checked) {
                 physicsLog = 120;
@@ -797,8 +776,6 @@
         <br/>
         <span class="SmallButton" onclick="hideOptions()" style="position:absolute;top:5px;right:5px;font-weight:bold;">close</span>
         <div style="text-align:left;margin:10px;">
-            <input id="LegacyGraphics" type="checkbox">Legacy Graphics</input>
-            <br/><br/>
             <h3>Debug Options</h3><br/>
             <input id="PhysicsLog" type="checkbox">Enable Physics Log</input>
             <br/><br/>
