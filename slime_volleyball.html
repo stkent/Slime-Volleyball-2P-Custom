@@ -148,7 +148,6 @@
         // MENU DATA
         var menuDiv;
         var smallMenuDiv;
-        var onePlayer;
         var nextSlimeIndex;
 
         var gameState;
@@ -360,17 +359,8 @@
         }
 
         function updateFrame() {
-            if (onePlayer) {
-                slimeAI.move(false); // Move the right slime
-                updateSlimeVelocitiesWithDoubleKeys(slimeLeft,
-                        KEY_A, KEY_LEFT,
-                        KEY_D, KEY_RIGHT,
-                        KEY_W, KEY_UP);
-                updateSlimeVelocities(slimeRight, slimeAI.movement, slimeAI.jumpSet);
-            } else {
-                updateSlimeVelocitiesWithKeys(slimeLeft, KEY_A, KEY_D, KEY_W);
-                updateSlimeVelocitiesWithKeys(slimeRight, KEY_LEFT, KEY_RIGHT, KEY_UP);
-            }
+            updateSlimeVelocitiesWithKeys(slimeLeft, KEY_A, KEY_D, KEY_W);
+            updateSlimeVelocitiesWithKeys(slimeRight, KEY_LEFT, KEY_RIGHT, KEY_UP);
 
             updateSlime(slimeLeft, 50, 445);
             updateSlime(slimeRight, 555, 950);
@@ -462,47 +452,20 @@
             }
         }
 
-
         function spaceKeyDown() {
             if (gameState == GAME_STATE_SHOW_WINNER) {
-                if (onePlayer && nextSlimeIndex >= slimeAIs.length) {
-                    nextSlimeIndex = 0;
-                    toInitialMenu();
-                } else {
-                    start(onePlayer);
-                }
+                start();
             }
         }
+
         function endMatch() {
             gameState = GAME_STATE_SHOW_WINNER;
             clearInterval(gameIntervalObject);
-            if (onePlayer) {
-                if (leftWon) {
-                    nextSlimeIndex++;
-                    if (nextSlimeIndex >= slimeAIs.length) {
-                        menuDiv.innerHTML = '<div style="text-align:center;">' +
-                                '<h1 style="margin:50px 0 20px 0;">You beat everyone!</h1>' +
-                                "Press 'space' to do it all over again!" +
-                                '</div>';
-                    } else {
-                        menuDiv.innerHTML = '<div style="text-align:center;">' +
-                                '<h1 style="margin:50px 0 20px 0;">You won!</h1>' +
-                                "Press 'space' to continue..." +
-                                '</div>';
-                    }
-                } else {
-                    nextSlimeIndex = 0;
-                    menuDiv.innerHTML = '<div style="text-align:center;">' +
-                            '<h1 style="margin:50px 0 20px 0;">You lost :(</h1>' +
-                            "Press 'space' to retry..." +
-                            '</div>';
-                }
-            } else {
-                menuDiv.innerHTML = '<div style="text-align:center;">' +
-                        '<h1 style="margin:50px 0 20px 0;">Player ' + (leftWon ? '1' : '2') + ' Wins!</h1>' +
-                        "Press 'space' for rematch..." +
-                        '</div>';
-            }
+            menuDiv.innerHTML = '<div style="text-align:center;">' +
+                    '<h1 style="margin:50px 0 20px 0;">Player ' + (leftWon ? '1' : '2') + ' Wins!</h1>' +
+                    "Press 'space' for rematch..." +
+                    '</div>';
+
             menuDiv.style.display = 'block';
             canvas.style.display = 'none';
         }
@@ -527,15 +490,8 @@
                 return;
             }
 
-            if (onePlayer) {
-                if (leftWon) {
-                    endOfPointText = 'Nice, you got the point!';
-                } else {
-                    endOfPointText = slimeAI.name + ' scores!';
-                }
-            } else {
-                endOfPointText = 'Player ' + (leftWon ? '1' : '2') + ' scores!';
-            }
+            endOfPointText = 'Player ' + (leftWon ? '1' : '2') + ' scores!';
+
             gameState = GAME_STATE_POINT_PAUSE;
             requestAnimationFrame(renderEndOfPoint);
 
@@ -663,37 +619,20 @@
         }
 
         // Menu Functions
-        function start(startAsOnePlayer) {
-            onePlayer = startAsOnePlayer;
-
+        function start() {
             slimeLeftScore = 0;
             slimeRightScore = 0;
 
             slimeLeft.img = greenSlimeImage;
-            if (onePlayer) {
-                var slimeAIProps = slimeAIs[nextSlimeIndex];
-                slimeRight.color = slimeAIProps.color;
-                legacySkyColor = slimeAIProps.legacySkyColor;
-                backImage = backImages[slimeAIProps.backImageName];
-                backTextColor = slimeAIProps.backTextColor;
-                legacyGroundColor = slimeAIProps.legacyGroundColor;
-                legacyBallColor = slimeAIProps.legacyBallColor;
-                newGroundColor = slimeAIProps.newGroundColor;
+            legacySkyColor = '#00f';
+            backImage = backImages['sky'];
+            backTextColor = '#000';
+            legacyGroundColor = '#888';
+            legacyBallColor = '#fff';
+            newGroundColor = '#ca6';
 
-                slimeRight.img = null;
-                slimeAI = newSlimeAI(false, slimeAIProps.name);
-                slimeAIProps.initAI(slimeAI);
-            } else {
-                legacySkyColor = '#00f';
-                backImage = backImages['sky'];
-                backTextColor = '#000';
-                legacyGroundColor = '#888';
-                legacyBallColor = '#fff';
-                newGroundColor = '#ca6';
-
-                slimeRight.img = redSlimeImage;
-                slimeAI = null;
-            }
+            slimeRight.img = redSlimeImage;
+            slimeAI = null;
 
             initRound(true);
 
@@ -708,8 +647,8 @@
         function toInitialMenu() {
             menuDiv.innerHTML = '<div style="text-align:center;">' +
                     '<h1 style="margin-top:30px;">Slime Volleyball</h1>' +
-                    '<span onclick="start(true)" class="btn" style="display:inline-block;margin:20px 30px 20px 30px;font-size:40px;">One Player</span>' +
-                    '<span onclick="start(false)" class="btn" style="display:inline-block;margin:20px 30px 20px 30px;font-size:40px;">Two Player</span>' +
+                    '<span onclick="start()" class="btn" style="display:inline-block;margin:20px 30px 20px 30px;font-size:40px;">One Player</span>' +
+                    '<span onclick="start()" class="btn" style="display:inline-block;margin:20px 30px 20px 30px;font-size:40px;">Two Player</span>' +
                     '<p>Originally written by Quin Pendragon and Daniel Wedge (http://oneslime.net)<br/>' +
                     'Rewritten by Jonathan Marler</p>'
             '</div>';
