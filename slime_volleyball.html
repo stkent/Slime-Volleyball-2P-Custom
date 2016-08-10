@@ -26,7 +26,7 @@
 
         // Objects rendered in the slime engine
         // need an x and a y parameter
-        function newLegacyBall(radius, color) {
+        function newBall(radius, color) {
             return {
                 radius: radius,
                 color: color,
@@ -42,14 +42,14 @@
                     // it was, so we add 2 pixels here to the radius
                     var radiusPix = this.radius * pixelsPerUnitY + 2;
 
-                    ctx.fillStyle = legacyBallColor;
+                    ctx.fillStyle = ballColor;
                     ctx.beginPath();
                     ctx.arc(xPix, yPix, radiusPix, 0, 2 * Math.PI);
                     ctx.fill();
                 }
             };
         }
-        function newLegacySlime(onLeft, radius, color) {
+        function newSlime(onLeft, radius, color) {
             return {
                 onLeft: onLeft,
                 radius: radius,
@@ -113,9 +113,9 @@
         var pixelsPerUnitX;
         var pixelsPerUnitY;
         var updatesToPaint;
-        var legacySkyColor;
-        var legacyGroundColor;
-        var legacyBallColor;
+        var skyColor;
+        var groundColor;
+        var ballColor;
         var newGroundColor;
         var backTextColor;
         var gameIntervalObject;
@@ -273,9 +273,9 @@
 
         // Rendering Functions
         function renderBackground() {
-            ctx.fillStyle = legacySkyColor;
+            ctx.fillStyle = skyColor;
             ctx.fillRect(0, 0, viewWidth, courtYPix);
-            ctx.fillStyle = legacyGroundColor;
+            ctx.fillStyle = groundColor;
             ctx.fillRect(0, courtYPix, viewWidth, viewHeight - courtYPix);
             ctx.fillStyle = '#fff';
             ctx.fillRect(viewWidth / 2 - 2, 7 * viewHeight / 10, 4, viewHeight / 10 + 5);
@@ -413,7 +413,7 @@
             canvas.style.display = 'none';
 
             ctx = canvas.getContext("2d");
-            ctx.font = "20px Georgia";
+            ctx.font = "20px Arial";
 
             gameWidth = 1000;
             gameHeight = 1000;
@@ -433,9 +433,9 @@
 
             // Initialize Game Data
             nextSlimeIndex = 0;
-            ball = newLegacyBall(25, '#ff0');
-            slimeLeft = newLegacySlime(true, 100, '#0f0');
-            slimeRight = newLegacySlime(false, 100, '#f00');
+            ball = newBall(25, '#ff0');
+            slimeLeft = newSlime(true, 100, '#0f0');
+            slimeRight = newSlime(false, 100, '#f00');
 
             start()
         }
@@ -445,10 +445,10 @@
             slimeLeftScore = 0;
             slimeRightScore = 0;
 
-            legacySkyColor = '#00f';
+            skyColor = '#00f';
             backTextColor = '#000';
-            legacyGroundColor = '#888';
-            legacyBallColor = '#fff';
+            groundColor = '#888';
+            ballColor = '#fff';
             newGroundColor = '#ca6';
 
             initRound(true);
