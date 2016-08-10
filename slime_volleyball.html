@@ -5,11 +5,11 @@
         * {
             margin: 0;
             padding: 0;
-            font-family: Arial;
+            font-family: Arial, serif;
         }
 
         h1 {
-            font-size: 70;
+            font-size: 70px;
         }
 
         h2 {
@@ -33,19 +33,19 @@
             background-image: -ms-linear-gradient(top, #3498db, #2980b9);
             background-image: -o-linear-gradient(top, #3498db, #2980b9);
             background-image: linear-gradient(to bottom, #3498db, #2980b9);
-            -webkit-border-radius: 15;
-            -moz-border-radius: 15;
+            -webkit-border-radius: 15px;
+            -moz-border-radius: 15px;
             border-radius: 15px;
             color: #ffffff;
-            padding: 10px 20px 10px 20px;
+            padding: 10px 20px;
             border: solid #1f628d 5px;
             text-decoration: none;
             cursor: pointer;
-            user-select: none;
-            -o-user-select: none;
-            -moz-user-select: none;
-            -khtml-user-select: none;
             -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
         }
 
         .btn:hover {
@@ -164,15 +164,9 @@
         var legacyGroundColor;
         var legacyBallColor;
         var newGroundColor;
-        var backImage;
         var backTextColor;
-        var backImages = {};
-        var ballImage;
         var gameIntervalObject;
         var endOfPointText;
-        var greenSlimeImage;
-        var redSlimeImage;
-
 
         // GAME DATA
         var gameWidth, gameHeight;
@@ -189,20 +183,6 @@
         }
 
         // Game Update Functions
-        function updateSlimeVelocities(s, movement, jump) {
-            if (movement == 0) {
-                s.velocityX = 0;
-            } else if (movement == 1) {
-                s.velocityX = -8;
-            } else if (movement == 2) {
-                s.velocityX = 8;
-            } else {
-                throw "slime movement " + movement + " is invalid";
-            }
-            if (jump && s.y == 0) {
-                s.velocityY = 31;
-            }
-        }
         function updateSlimeVelocitiesWithKeys(s, left, right, up) {
             // update velocities
             if (keysDown[left]) {
@@ -220,23 +200,7 @@
                 s.velocityY = 31;
             }
         }
-        function updateSlimeVelocitiesWithDoubleKeys(s, left1, left2, right1, right2, up1, up2) {
-            // update velocities
-            if (keysDown[left1] || keysDown[left2]) {
-                if (keysDown[right1] || keysDown[right2]) {
-                    s.velocityX = 0;
-                } else {
-                    s.velocityX = -8;
-                }
-            } else if (keysDown[right1] || keysDown[right2]) {
-                s.velocityX = 8;
-            } else {
-                s.velocityX = 0;
-            }
-            if (s.y == 0 && (keysDown[up1] || keysDown[up2])) {
-                s.velocityY = 31;
-            }
-        }
+
         function updateSlime(s, leftLimit, rightLimit) {
             if (s.velocityX != 0) {
                 s.x += s.velocityX;
@@ -264,7 +228,6 @@
             var dVelocityY = ball.velocityY - s.velocityY;
 
             if (dy > 0 && dist < ball.radius + s.radius && dist > FUDGE) {
-                var oldBall = {x: ball.x, y: ball.y, velocityX: ball.velocityX, velocityY: ball.velocityY};
                 if (physicsLog > 0) {
                     log("Collision:");
                     log(" dx        " + dx);
@@ -377,7 +340,7 @@
             ctx.strokeStyle = backTextColor;
             ctx.lineWidth = 2;
             x = initialX;
-            for (var i = 0; i < WIN_AMOUNT; i++) {
+            for (var j = 0; j < WIN_AMOUNT; j++) {
                 ctx.beginPath();
                 ctx.arc(x, 25, 12, 0, TWO_PI);
                 ctx.stroke();
@@ -391,7 +354,7 @@
             ctx.fillRect(0, 0, viewWidth, courtYPix);
             ctx.fillStyle = legacyGroundColor;
             ctx.fillRect(0, courtYPix, viewWidth, viewHeight - courtYPix);
-            ctx.fillStyle = '#fff'
+            ctx.fillStyle = '#fff';
             ctx.fillRect(viewWidth / 2 - 2, 7 * viewHeight / 10, 4, viewHeight / 10 + 5);
             // render scores
             renderPoints(slimeLeftScore, 30, 40);
@@ -450,6 +413,7 @@
             }
         }
 
+        //noinspection JSUnusedLocalSymbols
         function spaceKeyDown() {
             if (gameState == GAME_STATE_SHOW_WINNER) {
                 start();
@@ -570,43 +534,6 @@
             slimeLeft = newLegacySlime(true, 100, '#0f0');
             slimeRight = newLegacySlime(false, 100, '#f00');
 
-            var localSkyImage = new Image();
-            localSkyImage.src = 'sky2.jpg';
-            localSkyImage.onload = function () {
-                backImages['sky'] = this;
-            }
-            var localCaveImage = new Image();
-            localCaveImage.src = 'cave.jpg';
-            localCaveImage.onload = function () {
-                backImages['cave'] = this;
-            }
-            var sunsetImage = new Image();
-            sunsetImage.src = 'sunset.jpg';
-            sunsetImage.onload = function () {
-                backImages['sunset'] = this;
-            }
-
-            var localBallImage = new Image();
-            localBallImage.src = 'vball.png';
-            localBallImage.onload = function () {
-                ballImage = this;
-            }
-
-            greenSlimeImage = new Image();
-            greenSlimeImage.src = 'slime175green.png';
-            /*
-             greenSlimeImage.onload = function() {
-             slimeLeft.img = this;
-             }
-             */
-            redSlimeImage = new Image();
-            redSlimeImage.src = 'slime175red.png';
-            /*
-             redSlimeImage.onload = function() {
-             slimeRight.img = this;
-             }
-             */
-
             toInitialMenu();
         }
 
@@ -615,21 +542,17 @@
             slimeLeftScore = 0;
             slimeRightScore = 0;
 
-            slimeLeft.img = greenSlimeImage;
             legacySkyColor = '#00f';
-            backImage = backImages['sky'];
             backTextColor = '#000';
             legacyGroundColor = '#888';
             legacyBallColor = '#fff';
             newGroundColor = '#ca6';
 
-            slimeRight.img = redSlimeImage;
-
             initRound(true);
 
             updatesToPaint = 0;
             loadOptions();
-            gameState = GAME_STATE_RUNNING
+            gameState = GAME_STATE_RUNNING;
             renderBackground(); // clear the field
             canvas.style.display = 'block';
             menuDiv.style.display = 'none';
@@ -641,8 +564,8 @@
                     '<span onclick="start()" class="btn" style="display:inline-block;margin:20px 30px 20px 30px;font-size:40px;">One Player</span>' +
                     '<span onclick="start()" class="btn" style="display:inline-block;margin:20px 30px 20px 30px;font-size:40px;">Two Player</span>' +
                     '<p>Originally written by Quin Pendragon and Daniel Wedge (http://oneslime.net)<br/>' +
-                    'Rewritten by Jonathan Marler</p>'
-            '</div>';
+                    'Rewritten by Jonathan Marler</p>' +
+                    '</div>';
         }
         function loadOptions() {
             if (document.getElementById('PhysicsLog').checked) {
@@ -684,7 +607,7 @@
         <span class="SmallButton" onclick="hideOptions()" style="position:absolute;top:5px;right:5px;font-weight:bold;">close</span>
         <div style="text-align:left;margin:10px;">
             <h3>Debug Options</h3><br/>
-            <input id="PhysicsLog" type="checkbox">Enable Physics Log</input>
+            <input id="PhysicsLog" type="checkbox" title="Physics Log">Enable Physics Log</input>
         </div>
     </div>
     <span class="SmallButton" style="position:absolute;top:350px;left:10px;" onclick="showOptions()">
