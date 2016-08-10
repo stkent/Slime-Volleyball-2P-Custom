@@ -64,7 +64,6 @@
     <script type="text/javascript" src="input_handling.js"></script>
     <script type="text/javascript">
 
-        var physicsLog = 0;
         var TWO_PI = Math.PI * 2;
         var WIN_AMOUNT = 7;
 
@@ -228,31 +227,10 @@
             var dVelocityY = ball.velocityY - s.velocityY;
 
             if (dy > 0 && dist < ball.radius + s.radius && dist > FUDGE) {
-                if (physicsLog > 0) {
-                    log("Collision:");
-                    log(" dx        " + dx);
-                    log(" dy        " + dy);
-                    log(" dist      " + dist);
-                    log(" dvx       " + dVelocityX);
-                    log(" dvy       " + dVelocityY);
-                    log(" oldBallX  " + ball.x);
-                    log(" oldBallY  " + ball.y);
-                    log(" [DBG] s.x   : " + s.x);
-                    log(" [DBG] s.rad : " + s.radius);
-                    log(" [DBG] b.rad : " + ball.radius);
-                    log(" [DBG] 0   : " + Math.trunc((s.radius + ball.radius) / 2));
-                    log(" [DBG] 1   : " + Math.trunc((s.radius + ball.radius) / 2) * dx);
-                    log(" [DBG] 2   : " + Math.trunc(Math.trunc((s.radius + ball.radius) / 2) * dx / dist));
-                }
                 ball.x = s.x + Math.trunc(Math.trunc((s.radius + ball.radius) / 2) * dx / dist);
                 ball.y = s.y + Math.trunc((s.radius + ball.radius) * dy / dist);
 
                 var something = Math.trunc((dx * dVelocityX + dy * dVelocityY) / dist);
-                if (physicsLog > 0) {
-                    log(" newBallX  " + ball.x);
-                    log(" newBallY  " + ball.y);
-                    log(" something " + something);
-                }
 
                 if (something <= 0) {
                     ball.velocityX += Math.trunc(s.velocityX - 2 * dx * something / dist);
@@ -261,10 +239,6 @@
                     else if (ball.velocityX > MAX_VELOCITY_X) ball.velocityX = MAX_VELOCITY_X;
                     if (ball.velocityY < -MAX_VELOCITY_Y) ball.velocityY = -MAX_VELOCITY_Y;
                     else if (ball.velocityY > MAX_VELOCITY_Y) ball.velocityY = MAX_VELOCITY_Y;
-                    if (physicsLog > 0) {
-                        log(" ballVX    " + ball.velocityX);
-                        log(" ballVY    " + ball.velocityY);
-                    }
                 }
             }
         }
@@ -392,19 +366,7 @@
                 if (updatesToPaint > 0) {
                     console.log("WARNING: updating frame before it was rendered");
                 }
-                if (physicsLog > 0) {
-                    log("Frame");
-                    log(" ball.x  " + ball.x);
-                    log(" ball.y  " + ball.y);
-                    log(" ball.vx " + ball.velocityX);
-                    log(" ball.vy " + ball.velocityY);
-                    physicsLog--;
-                    if (physicsLog == 0) {
-                        var logDom = document.createElement('pre');
-                        logDom.innerHTML = logString;
-                        document.body.appendChild(logDom);
-                    }
-                }
+
                 updateFrame();
                 updatesToPaint++;
                 if (updatesToPaint == 1) {
@@ -551,7 +513,6 @@
             initRound(true);
 
             updatesToPaint = 0;
-            loadOptions();
             gameState = GAME_STATE_RUNNING;
             renderBackground(); // clear the field
             canvas.style.display = 'block';
@@ -566,13 +527,6 @@
                     '<p>Originally written by Quin Pendragon and Daniel Wedge (http://oneslime.net)<br/>' +
                     'Rewritten by Jonathan Marler</p>' +
                     '</div>';
-        }
-        function loadOptions() {
-            if (document.getElementById('PhysicsLog').checked) {
-                physicsLog = 120;
-            } else {
-                physicsLog = 0;
-            }
         }
         function showOptions() {
             if (gameState == GAME_STATE_RUNNING) {
@@ -591,7 +545,6 @@
             } else if (gameState == GAME_STATE_MENU_PAUSE_BETWEEN_POINTS) {
                 startNextPoint();
             }
-            loadOptions();
         }
     </script>
 </head>
@@ -606,8 +559,6 @@
         <br/>
         <span class="SmallButton" onclick="hideOptions()" style="position:absolute;top:5px;right:5px;font-weight:bold;">close</span>
         <div style="text-align:left;margin:10px;">
-            <h3>Debug Options</h3><br/>
-            <input id="PhysicsLog" type="checkbox" title="Physics Log">Enable Physics Log</input>
         </div>
     </div>
     <span class="SmallButton" style="position:absolute;top:350px;left:10px;" onclick="showOptions()">
