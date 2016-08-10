@@ -62,7 +62,6 @@
         }
     </style>
     <script type="text/javascript" src="input_handling.js"></script>
-    <script type="text/javascript" src="SlimeAI.js"></script>
     <script type="text/javascript">
 
         var physicsLog = 0;
@@ -182,7 +181,6 @@
         var slimeRight;
         var slimeLeftScore;
         var slimeRightScore;
-        var slimeAI;
         var leftWon;
 
         var logString;
@@ -475,12 +473,6 @@
             gameState = GAME_STATE_RUNNING;
         }
         function endPoint() {
-            if (slimeAI) {
-                keysDown[KEY_UP] = false;
-                keysDown[KEY_RIGHT] = false;
-                keysDown[KEY_LEFT] = false;
-            }
-
             if (slimeLeftScore >= WIN_AMOUNT) {
                 endMatch(true);
                 return;
@@ -632,7 +624,6 @@
             newGroundColor = '#ca6';
 
             slimeRight.img = redSlimeImage;
-            slimeAI = null;
 
             initRound(true);
 
