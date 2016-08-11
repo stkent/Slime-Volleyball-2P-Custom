@@ -101,7 +101,6 @@
         const BALL_COLOR = '#fff';
 
         var drawingContext;
-        var canvas;
         var viewWidth;
         var viewHeight;
         var courtYPix;
@@ -382,7 +381,7 @@
             var contentDiv = document.getElementById('GameContentDiv');
 
             // Create Render objects
-            canvas = document.createElement('canvas');
+            var canvas = document.createElement('canvas');
             canvas.style.display = 'block';
             canvas.width = 750;
             canvas.height = 375;
