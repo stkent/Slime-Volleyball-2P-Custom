@@ -116,7 +116,6 @@
         var pixelsPerUnitX;
         var pixelsPerUnitY;
         var updatesToPaint;
-        var backTextColor;
         var gameIntervalObject;
 
         // GAME DATA
@@ -260,7 +259,7 @@
                 ctx.fill();
                 x += xDiff;
             }
-            ctx.strokeStyle = backTextColor;
+            ctx.strokeStyle = "#000";
             ctx.lineWidth = 2;
             x = initialX;
             for (var j = 0; j < WIN_AMOUNT; j++) {
@@ -318,7 +317,7 @@
         //noinspection JSUnusedLocalSymbols
         function spaceKeyDown() {
             if (gameState == GAME_STATE_SHOW_WINNER) {
-                start();
+                startRound();
             }
         }
 
@@ -428,15 +427,13 @@
             leftSlime = newSlime(true, 100, '#0f0');
             rightSlime = newSlime(false, 100, '#f00');
 
-            start()
+            startRound()
         }
 
         // Menu Functions
-        function start() {
+        function startRound() {
             slimeLeftScore = 0;
             slimeRightScore = 0;
-
-            backTextColor = '#000';
 
             initRound(true);
 
