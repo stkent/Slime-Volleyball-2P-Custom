@@ -37,10 +37,10 @@
                     // it was, so we add 2 pixels here to the radius
                     var radiusPix = this.radius * pixelsPerUnitY + 2;
 
-                    ctx.fillStyle = BALL_COLOR;
-                    ctx.beginPath();
-                    ctx.arc(xPix, yPix, radiusPix, 0, 2 * Math.PI);
-                    ctx.fill();
+                    drawingContext.fillStyle = BALL_COLOR;
+                    drawingContext.beginPath();
+                    drawingContext.arc(xPix, yPix, radiusPix, 0, 2 * Math.PI);
+                    drawingContext.fill();
                 }
             };
         }
@@ -59,32 +59,32 @@
                     var yPix = courtYPix - (this.y * pixelsPerUnitY);
                     var radiusPix = this.radius * pixelsPerUnitY;
 
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(xPix, yPix, radiusPix, Math.PI, 2 * Math.PI);
-                    ctx.fill();
+                    drawingContext.fillStyle = this.color;
+                    drawingContext.beginPath();
+                    drawingContext.arc(xPix, yPix, radiusPix, Math.PI, 2 * Math.PI);
+                    drawingContext.fill();
 
                     // Draw Eyes
                     var eyeX = this.x + (this.onLeft ? 1 : -1) * this.radius / 4;
                     var eyeY = this.y + this.radius / 2;
                     var eyeXPix = eyeX * pixelsPerUnitX;
                     var eyeYPix = courtYPix - (eyeY * pixelsPerUnitY);
-                    ctx.translate(eyeXPix, eyeYPix);
-                    ctx.fillStyle = '#fff';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, radiusPix / 4, 0, 2 * Math.PI);
-                    ctx.fill();
+                    drawingContext.translate(eyeXPix, eyeYPix);
+                    drawingContext.fillStyle = '#fff';
+                    drawingContext.beginPath();
+                    drawingContext.arc(0, 0, radiusPix / 4, 0, 2 * Math.PI);
+                    drawingContext.fill();
 
                     // Draw Pupil
                     var dx = ball.x - eyeX;
                     var dy = eyeY - ball.y;
                     var dist = Math.sqrt(dx * dx + dy * dy);
                     var rPixOver8 = radiusPix / 8;
-                    ctx.fillStyle = '#000';
-                    ctx.beginPath();
-                    ctx.arc(rPixOver8 * dx / dist, rPixOver8 * dy / dist, rPixOver8, 0, 2 * Math.PI);
-                    ctx.fill();
-                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                    drawingContext.fillStyle = '#000';
+                    drawingContext.beginPath();
+                    drawingContext.arc(rPixOver8 * dx / dist, rPixOver8 * dy / dist, rPixOver8, 0, 2 * Math.PI);
+                    drawingContext.fill();
+                    drawingContext.setTransform(1, 0, 0, 1, 0, 0);
                 }
             };
         }
@@ -100,7 +100,7 @@
         const GROUND_COLOR = '#888';
         const BALL_COLOR = '#fff';
 
-        var ctx;
+        var drawingContext;
         var canvas;
         var viewWidth;
         var viewHeight;
@@ -243,33 +243,33 @@
         }
 
         function renderPoints(score, initialX, xDiff) {
-            ctx.fillStyle = '#ff0';
+            drawingContext.fillStyle = '#ff0';
             var x = initialX;
             for (var i = 0; i < score; i++) {
-                ctx.beginPath();
-                ctx.arc(x, 25, 12, 0, 2 * Math.PI);
-                ctx.fill();
+                drawingContext.beginPath();
+                drawingContext.arc(x, 25, 12, 0, 2 * Math.PI);
+                drawingContext.fill();
                 x += xDiff;
             }
-            ctx.strokeStyle = "#000";
-            ctx.lineWidth = 2;
+            drawingContext.strokeStyle = "#000";
+            drawingContext.lineWidth = 2;
             x = initialX;
             for (var j = 0; j < WIN_AMOUNT; j++) {
-                ctx.beginPath();
-                ctx.arc(x, 25, 12, 0, 2 * Math.PI);
-                ctx.stroke();
+                drawingContext.beginPath();
+                drawingContext.arc(x, 25, 12, 0, 2 * Math.PI);
+                drawingContext.stroke();
                 x += xDiff;
             }
         }
 
         // Rendering Functions
         function renderBackground() {
-            ctx.fillStyle = SKY_COLOR;
-            ctx.fillRect(0, 0, viewWidth, courtYPix);
-            ctx.fillStyle = GROUND_COLOR;
-            ctx.fillRect(0, courtYPix, viewWidth, viewHeight - courtYPix);
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(viewWidth / 2 - 2, 7 * viewHeight / 10, 4, viewHeight / 10 + 5);
+            drawingContext.fillStyle = SKY_COLOR;
+            drawingContext.fillRect(0, 0, viewWidth, courtYPix);
+            drawingContext.fillStyle = GROUND_COLOR;
+            drawingContext.fillRect(0, courtYPix, viewWidth, viewHeight - courtYPix);
+            drawingContext.fillStyle = '#fff';
+            drawingContext.fillRect(viewWidth / 2 - 2, 7 * viewHeight / 10, 4, viewHeight / 10 + 5);
             // render scores
             renderPoints(slimeLeftScore, 30, 40);
             renderPoints(slimeRightScore, viewWidth - 30, -40);
@@ -284,7 +284,7 @@
                     console.log("WARNING: render missed " + (updatesToPaint - 1) + " frame(s)");
                 }
                 renderBackground();
-                ctx.fillStyle = '#000';
+                drawingContext.fillStyle = '#000';
                 ball.render();
                 leftSlime.render();
                 rightSlime.render();
@@ -388,8 +388,8 @@
             canvas.height = 375;
             setupView(canvas, true);
 
-            ctx = canvas.getContext("2d");
-            ctx.font = "20px Arial";
+            drawingContext = canvas.getContext("2d");
+            drawingContext.font = "20px Arial";
 
             gameWidth = 1000;
             gameHeight = 1000;
