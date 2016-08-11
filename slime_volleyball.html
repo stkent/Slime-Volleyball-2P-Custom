@@ -41,7 +41,7 @@
                     // it was, so we add 2 pixels here to the radius
                     var radiusPix = this.radius * pixelsPerUnitY + 2;
 
-                    ctx.fillStyle = ballColor;
+                    ctx.fillStyle = BALL_COLOR;
                     ctx.beginPath();
                     ctx.arc(xPix, yPix, radiusPix, 0, 2 * Math.PI);
                     ctx.fill();
@@ -104,6 +104,10 @@
         var gameState;
 
         // RENDER DATA
+        const SKY_COLOR = "#00f";
+        const GROUND_COLOR = '#888';
+        const BALL_COLOR = '#fff';
+
         var ctx;
         var canvas;
         var viewWidth;
@@ -112,9 +116,6 @@
         var pixelsPerUnitX;
         var pixelsPerUnitY;
         var updatesToPaint;
-        var skyColor;
-        var groundColor;
-        var ballColor;
         var backTextColor;
         var gameIntervalObject;
 
@@ -272,9 +273,9 @@
 
         // Rendering Functions
         function renderBackground() {
-            ctx.fillStyle = skyColor;
+            ctx.fillStyle = SKY_COLOR;
             ctx.fillRect(0, 0, viewWidth, courtYPix);
-            ctx.fillStyle = groundColor;
+            ctx.fillStyle = GROUND_COLOR;
             ctx.fillRect(0, courtYPix, viewWidth, viewHeight - courtYPix);
             ctx.fillStyle = '#fff';
             ctx.fillRect(viewWidth / 2 - 2, 7 * viewHeight / 10, 4, viewHeight / 10 + 5);
@@ -435,10 +436,7 @@
             slimeLeftScore = 0;
             slimeRightScore = 0;
 
-            skyColor = '#00f';
             backTextColor = '#000';
-            groundColor = '#888';
-            ballColor = '#fff';
 
             initRound(true);
 
