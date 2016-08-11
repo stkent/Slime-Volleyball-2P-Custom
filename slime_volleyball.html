@@ -93,9 +93,6 @@
         var GAME_STATE_POINT_PAUSE = 2;
         var GAME_STATE_SHOW_WINNER = 3;
 
-        // MENU DATA
-        var menuDiv;
-
         var gameState;
 
         // RENDER DATA
@@ -319,13 +316,6 @@
         function endMatch() {
             gameState = GAME_STATE_SHOW_WINNER;
             clearInterval(gameIntervalObject);
-            menuDiv.innerHTML = '<div style="text-align:center;">' +
-                    '<h1 style="margin:50px 0 20px 0;">Player ' + (leftWon ? '1' : '2') + ' Wins!</h1>' +
-                    "Press 'space' for rematch..." +
-                    '</div>';
-
-            menuDiv.style.display = 'block';
-            canvas.style.display = 'none';
         }
 
         function startNextPoint() {
@@ -393,10 +383,10 @@
 
             // Create Render objects
             canvas = document.createElement('canvas');
+            canvas.style.display = 'block';
             canvas.width = 750;
             canvas.height = 375;
             setupView(canvas, true);
-            canvas.style.display = 'none';
 
             ctx = canvas.getContext("2d");
             ctx.font = "20px Arial";
@@ -408,15 +398,6 @@
             updateWindowSize(canvas.width, canvas.height);
             contentDiv.appendChild(canvas);
 
-            // Create Menu Objects
-            menuDiv = document.createElement('div');
-            setupView(menuDiv, false);
-            menuDiv.style.width = '750px';
-            menuDiv.style.height = '375px';
-
-            menuDiv.style.background = "#ca6 no-repeat";
-            contentDiv.appendChild(menuDiv);
-
             // Initialize Game Data
             ball = newBall(25, '#ff0');
             leftSlime = newSlime(true, 100, '#0f0');
@@ -425,7 +406,6 @@
             startRound()
         }
 
-        // Menu Functions
         function startRound() {
             slimeLeftScore = 0;
             slimeRightScore = 0;
@@ -435,8 +415,6 @@
             updatesToPaint = 0;
             gameState = GAME_STATE_RUNNING;
             renderBackground(); // clear the field
-            canvas.style.display = 'block';
-            menuDiv.style.display = 'none';
             gameIntervalObject = setInterval(gameIteration, 20);
         }
     </script>
