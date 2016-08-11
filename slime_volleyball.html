@@ -121,8 +121,8 @@
         // GAME DATA
         var gameWidth, gameHeight;
         var ball;
-        var slimeLeft;
-        var slimeRight;
+        var leftSlime;
+        var rightSlime;
         var slimeLeftScore;
         var slimeRightScore;
         var leftWon;
@@ -146,18 +146,18 @@
             }
         }
 
-        function updateSlime(s, leftLimit, rightLimit) {
-            if (s.velocityX != 0) {
-                s.x += s.velocityX;
-                if (s.x < leftLimit) s.x = leftLimit;
-                else if (s.x > rightLimit) s.x = rightLimit;
+        function updateSlime(slime, leftLimit, rightLimit) {
+            if (slime.velocityX != 0) {
+                slime.x += slime.velocityX;
+                if (slime.x < leftLimit) slime.x = leftLimit;
+                else if (slime.x > rightLimit) slime.x = rightLimit;
             }
-            if (s.velocityY != 0 || s.y > 0) {
-                s.velocityY -= 2;
-                s.y += s.velocityY;
-                if (s.y < 0) {
-                    s.y = 0;
-                    s.velocityY = 0;
+            if (slime.velocityY != 0 || slime.y > 0) {
+                slime.velocityY -= 2;
+                slime.y += slime.velocityY;
+                if (slime.y < 0) {
+                    slime.y = 0;
+                    slime.velocityY = 0;
                 }
             }
         }
@@ -165,23 +165,23 @@
         var MAX_VELOCITY_X = 15;
         var MAX_VELOCITY_Y = 22;
 
-        function collisionBallSlime(s) {
-            var dx = 2 * (ball.x - s.x);
-            var dy = ball.y - s.y;
+        function collisionBallSlime(slime) {
+            var dx = 2 * (ball.x - slime.x);
+            var dy = ball.y - slime.y;
             var dist = Math.trunc(Math.sqrt(dx * dx + dy * dy));
 
-            var dVelocityX = ball.velocityX - s.velocityX;
-            var dVelocityY = ball.velocityY - s.velocityY;
+            var dVelocityX = ball.velocityX - slime.velocityX;
+            var dVelocityY = ball.velocityY - slime.velocityY;
 
-            if (dy > 0 && dist < ball.radius + s.radius && dist > FUDGE) {
-                ball.x = s.x + Math.trunc(Math.trunc((s.radius + ball.radius) / 2) * dx / dist);
-                ball.y = s.y + Math.trunc((s.radius + ball.radius) * dy / dist);
+            if (dy > 0 && dist < ball.radius + slime.radius && dist > FUDGE) {
+                ball.x = slime.x + Math.trunc(Math.trunc((slime.radius + ball.radius) / 2) * dx / dist);
+                ball.y = slime.y + Math.trunc((slime.radius + ball.radius) * dy / dist);
 
                 var something = Math.trunc((dx * dVelocityX + dy * dVelocityY) / dist);
 
                 if (something <= 0) {
-                    ball.velocityX += Math.trunc(s.velocityX - 2 * dx * something / dist);
-                    ball.velocityY += Math.trunc(s.velocityY - 2 * dy * something / dist);
+                    ball.velocityX += Math.trunc(slime.velocityX - 2 * dx * something / dist);
+                    ball.velocityY += Math.trunc(slime.velocityY - 2 * dy * something / dist);
                     if (ball.velocityX < -MAX_VELOCITY_X) ball.velocityX = -MAX_VELOCITY_X;
                     else if (ball.velocityX > MAX_VELOCITY_X) ball.velocityX = MAX_VELOCITY_X;
                     if (ball.velocityY < -MAX_VELOCITY_Y) ball.velocityY = -MAX_VELOCITY_Y;
@@ -201,8 +201,8 @@
             ball.x += ball.velocityX;
             ball.y += ball.velocityY;
 
-            collisionBallSlime(slimeLeft);
-            collisionBallSlime(slimeRight);
+            collisionBallSlime(leftSlime);
+            collisionBallSlime(rightSlime);
 
             // handle wall hits
             if (ball.x < 15) {
@@ -242,11 +242,11 @@
         }
 
         function updateFrame() {
-            updateSlimeVelocitiesWithKeys(slimeLeft, KEY_A, KEY_D, KEY_W);
-            updateSlimeVelocitiesWithKeys(slimeRight, KEY_LEFT, KEY_RIGHT, KEY_UP);
+            updateSlimeVelocitiesWithKeys(leftSlime, KEY_A, KEY_D, KEY_W);
+            updateSlimeVelocitiesWithKeys(rightSlime, KEY_LEFT, KEY_RIGHT, KEY_UP);
 
-            updateSlime(slimeLeft, 50, 445);
-            updateSlime(slimeRight, 555, 950);
+            updateSlime(leftSlime, 50, 445);
+            updateSlime(rightSlime, 555, 950);
             updateBall();
         }
 
@@ -294,8 +294,8 @@
                 renderBackground();
                 ctx.fillStyle = '#000';
                 ball.render();
-                slimeLeft.render();
-                slimeRight.render();
+                leftSlime.render();
+                rightSlime.render();
                 updatesToPaint = 0;
             }
         }
@@ -365,15 +365,15 @@
             ball.velocityX = 0;
             ball.velocityY = 0;
 
-            slimeLeft.x = 200;
-            slimeLeft.y = 0;
-            slimeLeft.velocityX = 0;
-            slimeLeft.velocityY = 0;
+            leftSlime.x = 200;
+            leftSlime.y = 0;
+            leftSlime.velocityX = 0;
+            leftSlime.velocityY = 0;
 
-            slimeRight.x = 800;
-            slimeRight.y = 0;
-            slimeRight.velocityX = 0;
-            slimeRight.velocityY = 0;
+            rightSlime.x = 800;
+            rightSlime.y = 0;
+            rightSlime.velocityX = 0;
+            rightSlime.velocityY = 0;
         }
 
         function updateWindowSize(width, height) {
@@ -424,8 +424,8 @@
 
             // Initialize Game Data
             ball = newBall(25, '#ff0');
-            slimeLeft = newSlime(true, 100, '#0f0');
-            slimeRight = newSlime(false, 100, '#f00');
+            leftSlime = newSlime(true, 100, '#0f0');
+            rightSlime = newSlime(false, 100, '#f00');
 
             start()
         }
