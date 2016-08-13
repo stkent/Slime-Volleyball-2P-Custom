@@ -81,13 +81,13 @@
 
         function newSlime(onLeft, radius, color) {
             return {
-                onLeft: onLeft,
-                radius: radius,
-                color: color,
                 x: 0,
                 y: 0,
                 velocityX: 0,
                 velocityY: 0,
+                radius: radius,
+                color: color,
+                onLeft: onLeft,
                 render: function () {
                     var xPix = this.x * pixelsPerUnitX;
                     var yPix = courtYPix - (this.y * pixelsPerUnitY);
