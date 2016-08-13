@@ -23,13 +23,21 @@
         const CANVAS_WIDTH_PX = 750;
         const CANVAS_HEIGHT_PX = 375;
 
-        // Game Configuration --------------------------------------------------------------------------------------- //
+        // Game Parameter Configuration ----------------------------------------------------------------------------- //
 
         /*
          * The total number of points available to be distributed between the two players. Should be an even number so
          * that each player may begin with half of the total number of points.
          */
         const TOTAL_POINTS = 10;
+
+        // Graphics Configuration ----------------------------------------------------------------------------------- //
+
+        const POINT_MARKER_RADIUS_PX = 12;
+        const POINT_MARKER_VERTICAL_POSITION_PX = 25;
+        const POINT_MARKER_HORIZONTAL_SPACING_PX = 40;
+
+        // Game State ----------------------------------------------------------------------------------------------- //
 
         // The number of points currently assigned to the left player. Must lie in the range [0, TOTAL_POINTS].
         var leftPlayerPoints;
@@ -39,11 +47,11 @@
             return TOTAL_POINTS - leftPlayerPoints;
         }
 
-        // Point Display Configuration ------------------------------------------------------------------------------ //
+        const GAME_STATE_RUNNING = 1;
+        const GAME_STATE_POINT_PAUSE = 2;
+        const GAME_STATE_SHOW_WINNER = 3;
 
-        const POINT_MARKER_RADIUS_PX = 12;
-        const POINT_MARKER_VERTICAL_POSITION_PX = 25;
-        const POINT_MARKER_HORIZONTAL_SPACING_PX = 40;
+        var gameState;
 
         // Objects rendered in the slime engine
         // need an x and a y parameter
@@ -112,12 +120,6 @@
         }
             };
         }
-
-        var GAME_STATE_RUNNING = 1;
-        var GAME_STATE_POINT_PAUSE = 2;
-        var GAME_STATE_SHOW_WINNER = 3;
-
-        var gameState;
 
         // RENDER DATA
         const SKY_COLOR = "#00f";
@@ -282,11 +284,10 @@
         function renderPoint(x, y, fillColor) {
             drawingContext.beginPath();
             drawingContext.arc(x, y, POINT_MARKER_RADIUS_PX, 0, TAU);
+
             drawingContext.fillStyle = fillColor;
             drawingContext.fill();
 
-            drawingContext.beginPath();
-            drawingContext.arc(x, y, POINT_MARKER_RADIUS_PX, 0, TAU);
             drawingContext.strokeStyle = "#fff";
             drawingContext.lineWidth = 2;
             drawingContext.stroke();
