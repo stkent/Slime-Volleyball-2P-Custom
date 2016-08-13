@@ -87,7 +87,7 @@
                 velocityY: 0,
                 radius: radius,
                 color: color,
-                onLeft: onLeft,
+                eyeOffsetX: (onLeft ? 1 : -1) * radius / 4,
                 render: function () {
                     var xPix = this.x * pixelsPerUnitX;
                     var yPix = courtYPix - (this.y * pixelsPerUnitY);
@@ -99,7 +99,7 @@
                     drawingContext.fill();
 
                     // Draw Eyes
-                    var eyeX = this.x + (this.onLeft ? 1 : -1) * this.radius / 4;
+                    var eyeX = this.x + this.eyeOffsetX;
                     var eyeY = this.y + this.radius / 2;
                     var eyeXPix = eyeX * pixelsPerUnitX;
                     var eyeYPix = courtYPix - (eyeY * pixelsPerUnitY);
