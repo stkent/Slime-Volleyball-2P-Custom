@@ -103,7 +103,9 @@
                     var eyeY = this.y + this.radius / 2;
                     var eyeXPix = eyeX * pixelsPerUnitX;
                     var eyeYPix = courtYPix - (eyeY * pixelsPerUnitY);
+
                     drawingContext.translate(eyeXPix, eyeYPix);
+
                     drawingContext.fillStyle = '#fff';
                     drawingContext.beginPath();
                     drawingContext.arc(0, 0, radiusPix / 4, 0, TAU);
@@ -118,7 +120,8 @@
                     drawingContext.beginPath();
                     drawingContext.arc(rPixOver8 * dx / dist, rPixOver8 * dy / dist, rPixOver8, 0, TAU);
                     drawingContext.fill();
-                    drawingContext.setTransform(1, 0, 0, 1, 0, 0);
+
+                    drawingContext.translate(-eyeXPix, -eyeYPix);
         }
             };
         }
