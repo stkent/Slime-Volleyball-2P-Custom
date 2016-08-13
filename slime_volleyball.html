@@ -14,18 +14,46 @@
     <script type="text/javascript" src="input_handling.js"></script>
     <script type="text/javascript">
 
-        const WIN_AMOUNT = 7;
+        // Computation Definitions ---------------------------------------------------------------------------------- //
+
+        const TAU = 2 * Math.PI;
 
         Math.trunc = Math.trunc || function (x) {
                     return ~~x;
                 };
 
+        // UI Configuration ----------------------------------------------------------------------------------------- //
+
+        const CANVAS_WIDTH_PX = 750;
+        const CANVAS_HEIGHT_PX = 375;
+
+        // Game Configuration --------------------------------------------------------------------------------------- //
+
+        /*
+         * The total number of points available to be distributed between the two players. Should be an even number so
+         * that each player may begin with half of the total number of points.
+         */
+        const TOTAL_POINTS = 10;
+
+        // The number of points currently assigned to the left player. Must lie in the range [0, TOTAL_POINTS].
+        var leftPlayerPoints;
+
+        // The number of points currently assigned to the right player.  Must lie in the range [0, TOTAL_POINTS].
+        function rightPlayerPoints() {
+            return TOTAL_POINTS - leftPlayerPoints;
+        }
+
+        // Point Display Configuration ------------------------------------------------------------------------------ //
+
+        const POINT_MARKER_RADIUS_PX = 12;
+        const POINT_MARKER_VERTICAL_POSITION_PX = 25;
+        const POINT_MARKER_HORIZONTAL_SPACING_PX = 40;
+
         // Objects rendered in the slime engine
         // need an x and a y parameter
-        function newBall(radius, color) {
+        function newBall(radius) {
             return {
                 radius: radius,
-                color: color,
                 x: 0,
                 y: 0,
                 velocityX: 0,
@@ -39,7 +67,7 @@
 
                     drawingContext.fillStyle = BALL_COLOR;
                     drawingContext.beginPath();
-                    drawingContext.arc(xPix, yPix, radiusPix, 0, 2 * Math.PI);
+                    drawingContext.arc(xPix, yPix, radiusPix, 0, TAU);
                     drawingContext.fill();
                 }
             };
@@ -61,7 +89,7 @@
 
                     drawingContext.fillStyle = this.color;
                     drawingContext.beginPath();
-                    drawingContext.arc(xPix, yPix, radiusPix, Math.PI, 2 * Math.PI);
+                    drawingContext.arc(xPix, yPix, radiusPix, Math.PI, TAU);
                     drawingContext.fill();
 
                     // Draw Eyes
@@ -72,7 +100,7 @@
                     drawingContext.translate(eyeXPix, eyeYPix);
                     drawingContext.fillStyle = '#fff';
                     drawingContext.beginPath();
-                    drawingContext.arc(0, 0, radiusPix / 4, 0, 2 * Math.PI);
+                    drawingContext.arc(0, 0, radiusPix / 4, 0, TAU);
                     drawingContext.fill();
 
                     // Draw Pupil
@@ -82,10 +110,10 @@
                     var rPixOver8 = radiusPix / 8;
                     drawingContext.fillStyle = '#000';
                     drawingContext.beginPath();
-                    drawingContext.arc(rPixOver8 * dx / dist, rPixOver8 * dy / dist, rPixOver8, 0, 2 * Math.PI);
+                    drawingContext.arc(rPixOver8 * dx / dist, rPixOver8 * dy / dist, rPixOver8, 0, TAU);
                     drawingContext.fill();
                     drawingContext.setTransform(1, 0, 0, 1, 0, 0);
-                }
+        }
             };
         }
 
@@ -98,7 +126,9 @@
         // RENDER DATA
         const SKY_COLOR = "#00f";
         const GROUND_COLOR = '#888';
-        const BALL_COLOR = '#fff';
+        const BALL_COLOR = '#ff0';
+        const LEFT_SLIME_COLOR = "#f00";
+        const RIGHT_SLIME_COLOR = "#0f0";
 
         var drawingContext;
         var viewWidth;
@@ -114,8 +144,6 @@
         var ball;
         var leftSlime;
         var rightSlime;
-        var slimeLeftScore;
-        var slimeRightScore;
         var leftWon;
 
         // Game Update Functions
@@ -222,10 +250,10 @@
             if (ball.y < 0) {
                 if (ball.x > 500) {
                     leftWon = true;
-                    slimeLeftScore++;
+                    leftPlayerPoints++;
                 } else {
                     leftWon = false;
-                    slimeRightScore++;
+                    leftPlayerPoints--;
                 }
 
                 endPoint();
@@ -241,24 +269,31 @@
             updateBall();
         }
 
-        function renderPoints(score, initialX, xDiff) {
-            drawingContext.fillStyle = '#ff0';
-            var x = initialX;
-            for (var i = 0; i < score; i++) {
-                drawingContext.beginPath();
-                drawingContext.arc(x, 25, 12, 0, 2 * Math.PI);
-                drawingContext.fill();
-                x += xDiff;
+        function renderPoints() {
+            var leftPlayerPointHorizontalPosition = 30;
+            for (var i = 0; i < leftPlayerPoints; i++) {
+                renderPoint(leftPlayerPointHorizontalPosition, POINT_MARKER_VERTICAL_POSITION_PX, LEFT_SLIME_COLOR);
+                leftPlayerPointHorizontalPosition += POINT_MARKER_HORIZONTAL_SPACING_PX;
             }
-            drawingContext.strokeStyle = "#000";
+
+            var rightPlayerPointHorizontalPosition = 720;
+            for (var j = 0; j < rightPlayerPoints(); j++) {
+                renderPoint(rightPlayerPointHorizontalPosition, POINT_MARKER_VERTICAL_POSITION_PX, RIGHT_SLIME_COLOR);
+                rightPlayerPointHorizontalPosition -= POINT_MARKER_HORIZONTAL_SPACING_PX;
+            }
+        }
+
+        function renderPoint(x, y, fillColor) {
+            drawingContext.beginPath();
+            drawingContext.arc(x, y, POINT_MARKER_RADIUS_PX, 0, TAU);
+            drawingContext.fillStyle = fillColor;
+            drawingContext.fill();
+
+            drawingContext.beginPath();
+            drawingContext.arc(x, y, POINT_MARKER_RADIUS_PX, 0, TAU);
+            drawingContext.strokeStyle = "#fff";
             drawingContext.lineWidth = 2;
-            x = initialX;
-            for (var j = 0; j < WIN_AMOUNT; j++) {
-                drawingContext.beginPath();
-                drawingContext.arc(x, 25, 12, 0, 2 * Math.PI);
-                drawingContext.stroke();
-                x += xDiff;
-            }
+            drawingContext.stroke();
         }
 
         // Rendering Functions
@@ -269,9 +304,8 @@
             drawingContext.fillRect(0, courtYPix, viewWidth, viewHeight - courtYPix);
             drawingContext.fillStyle = '#fff';
             drawingContext.fillRect(viewWidth / 2 - 2, 7 * viewHeight / 10, 4, viewHeight / 10 + 5);
-            // render scores
-            renderPoints(slimeLeftScore, 30, 40);
-            renderPoints(slimeRightScore, viewWidth - 30, -40);
+
+            renderPoints();
         }
 
         // GAME CODE
@@ -299,6 +333,7 @@
 
                 updateFrame();
                 updatesToPaint++;
+
                 if (updatesToPaint == 1) {
                     requestAnimationFrame(renderGame);
                 }
@@ -324,11 +359,11 @@
         }
 
         function endPoint() {
-            if (slimeLeftScore >= WIN_AMOUNT) {
+            if (leftPlayerPoints == TOTAL_POINTS) {
                 endMatch(true);
                 return;
             }
-            if (slimeRightScore >= WIN_AMOUNT) {
+            if (rightPlayerPoints() >= TOTAL_POINTS) {
                 endMatch(false);
                 return;
             }
@@ -378,13 +413,12 @@
         }
 
         function onInitialLoad() {
-            var contentDiv = document.getElementById('GameContentDiv');
+            const contentDiv = document.getElementById('GameContentDiv');
 
             // Create Render objects
-            var canvas = document.createElement('canvas');
-            canvas.style.display = 'block';
-            canvas.width = 750;
-            canvas.height = 375;
+            const canvas = document.createElement('canvas');
+            canvas.width = CANVAS_WIDTH_PX;
+            canvas.height = CANVAS_HEIGHT_PX;
             setupView(canvas, true);
 
             drawingContext = canvas.getContext("2d");
@@ -398,16 +432,15 @@
             contentDiv.appendChild(canvas);
 
             // Initialize Game Data
-            ball = newBall(25, '#ff0');
-            leftSlime = newSlime(true, 100, '#0f0');
-            rightSlime = newSlime(false, 100, '#f00');
+            ball = newBall(25);
+            leftSlime = newSlime(true, 100, LEFT_SLIME_COLOR);
+            rightSlime = newSlime(false, 100, RIGHT_SLIME_COLOR);
 
             startRound()
         }
 
         function startRound() {
-            slimeLeftScore = 0;
-            slimeRightScore = 0;
+            leftPlayerPoints = TOTAL_POINTS / 2;
 
             initRound(true);
 
