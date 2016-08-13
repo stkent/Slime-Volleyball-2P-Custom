@@ -79,7 +79,7 @@
             };
         }
 
-        function newSlime(onLeft, radius, color) {
+        function newSlime(radius, color, onLeft) {
             return {
                 x: 0,
                 y: 0,
@@ -432,8 +432,8 @@
 
             // Initialize Game Data
             ball = newBall();
-            leftSlime = newSlime(true, 100, LEFT_SLIME_COLOR);
-            rightSlime = newSlime(false, 100, RIGHT_SLIME_COLOR);
+            leftSlime = newSlime(100, LEFT_SLIME_COLOR, true);
+            rightSlime = newSlime(100, RIGHT_SLIME_COLOR, false);
 
             startRound()
         }
