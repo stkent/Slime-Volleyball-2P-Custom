@@ -31,6 +31,8 @@
          */
         const TOTAL_POINTS = 10;
 
+        const BALL_RADIUS_GAME_COORDINATES = 25;
+
         // Graphics Configuration ----------------------------------------------------------------------------------- //
 
         const POINT_MARKER_RADIUS_PX = 12;
@@ -55,13 +57,13 @@
 
         // Objects rendered in the slime engine
         // need an x and a y parameter
-        function newBall(radius) {
+        function newBall() {
             return {
-                radius: radius,
                 x: 0,
                 y: 0,
                 velocityX: 0,
                 velocityY: 0,
+                radius: BALL_RADIUS_GAME_COORDINATES,
                 render: function () {
                     var xPix = this.x * pixelsPerUnitX;
                     var yPix = courtYPix - (this.y * pixelsPerUnitY);
@@ -429,7 +431,7 @@
             contentDiv.appendChild(canvas);
 
             // Initialize Game Data
-            ball = newBall(25);
+            ball = newBall();
             leftSlime = newSlime(true, 100, LEFT_SLIME_COLOR);
             rightSlime = newSlime(false, 100, RIGHT_SLIME_COLOR);
 
