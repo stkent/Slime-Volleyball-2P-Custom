@@ -64,7 +64,7 @@
                 velocityX: 0,
                 velocityY: 0,
                 radius: BALL_RADIUS_GAME_COORDINATES,
-                render: function () {
+                render: function() {
                     var xPix = this.x * pixelsPerUnitX;
                     var yPix = courtYPix - (this.y * pixelsPerUnitY);
                     // The original game's ball looked bigger then
@@ -88,7 +88,7 @@
                 radius: radius,
                 color: color,
                 eyeOffsetX: (onLeft ? 1 : -1) * radius / 4,
-                render: function () {
+                render: function() {
                     var xPix = this.x * pixelsPerUnitX;
                     var yPix = courtYPix - (this.y * pixelsPerUnitY);
                     var radiusPix = this.radius * pixelsPerUnitY;
