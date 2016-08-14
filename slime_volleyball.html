@@ -55,75 +55,69 @@
 
         var gameState;
 
-        // Objects rendered in the slime engine
-        // need an x and a y parameter
-        function newBall() {
-            return {
-                x: 0,
-                y: 0,
-                velocityX: 0,
-                velocityY: 0,
-                radius: BALL_RADIUS_GAME_COORDINATES,
-                render: function() {
-                    var xPix = this.x * pixelsPerUnitX;
-                    var yPix = courtYPix - (this.y * pixelsPerUnitY);
-                    // The original game's ball looked bigger then
-                    // it was, so we add 2 pixels here to the radius
-                    var radiusPix = this.radius * pixelsPerUnitY + 2;
+        function Ball() {
+            this.x = 0;
+            this.y = 0;
+            this.velocityX = 0;
+            this.velocityY = 0;
+            this.radius = BALL_RADIUS_GAME_COORDINATES;
+            this.render = function() {
+                var xPix = this.x * pixelsPerUnitX;
+                var yPix = courtYPix - (this.y * pixelsPerUnitY);
+                // The original game's ball looked bigger then
+                // it was, so we add 2 pixels here to the radius
+                var radiusPix = this.radius * pixelsPerUnitY + 2;
 
-                    drawingContext.fillStyle = BALL_COLOR;
-                    drawingContext.beginPath();
-                    drawingContext.arc(xPix, yPix, radiusPix, 0, TAU);
-                    drawingContext.fill();
-                }
-            };
+                drawingContext.fillStyle = BALL_COLOR;
+                drawingContext.beginPath();
+                drawingContext.arc(xPix, yPix, radiusPix, 0, TAU);
+                drawingContext.fill();
+            }
         }
 
-        function newSlime(radius, color, onLeft) {
-            return {
-                x: 0,
-                y: 0,
-                velocityX: 0,
-                velocityY: 0,
-                physicsMode: null, // TODO: build normal and fire slime modes
-                radius: radius,
-                color: color,
-                eyeOffsetX: (onLeft ? 1 : -1) * radius / 4,
-                render: function() {
-                    var xPix = this.x * pixelsPerUnitX;
-                    var yPix = courtYPix - (this.y * pixelsPerUnitY);
-                    var radiusPix = this.radius * pixelsPerUnitY;
+        function Slime(radius, color, onLeft) {
+            this.x = 0;
+            this.y = 0;
+            this.velocityX = 0;
+            this.velocityY = 0;
+            this.physicsMode = null; // TODO: build normal and fire slime modes
+            this.radius = radius;
+            this.color = color;
+            this.eyeOffsetX = (onLeft ? 1 : -1) * radius / 4;
+            this.render = function() {
+                var xPix = this.x * pixelsPerUnitX;
+                var yPix = courtYPix - (this.y * pixelsPerUnitY);
+                var radiusPix = this.radius * pixelsPerUnitY;
 
-                    drawingContext.fillStyle = this.color;
-                    drawingContext.beginPath();
-                    drawingContext.arc(xPix, yPix, radiusPix, Math.PI, TAU);
-                    drawingContext.fill();
+                drawingContext.fillStyle = this.color;
+                drawingContext.beginPath();
+                drawingContext.arc(xPix, yPix, radiusPix, Math.PI, TAU);
+                drawingContext.fill();
 
-                    // Draw Eyes
-                    var eyeX = this.x + this.eyeOffsetX;
-                    var eyeY = this.y + this.radius / 2;
-                    var eyeXPix = eyeX * pixelsPerUnitX;
-                    var eyeYPix = courtYPix - (eyeY * pixelsPerUnitY);
+                // Draw Eyes
+                var eyeX = this.x + this.eyeOffsetX;
+                var eyeY = this.y + this.radius / 2;
+                var eyeXPix = eyeX * pixelsPerUnitX;
+                var eyeYPix = courtYPix - (eyeY * pixelsPerUnitY);
 
-                    drawingContext.translate(eyeXPix, eyeYPix);
+                drawingContext.translate(eyeXPix, eyeYPix);
 
-                    drawingContext.fillStyle = '#fff';
-                    drawingContext.beginPath();
-                    drawingContext.arc(0, 0, radiusPix / 4, 0, TAU);
-                    drawingContext.fill();
+                drawingContext.fillStyle = '#fff';
+                drawingContext.beginPath();
+                drawingContext.arc(0, 0, radiusPix / 4, 0, TAU);
+                drawingContext.fill();
 
-                    // Draw Pupil
-                    var dx = ball.x - eyeX;
-                    var dy = eyeY - ball.y;
-                    var dist = Math.sqrt(dx * dx + dy * dy);
-                    var rPixOver8 = radiusPix / 8;
-                    drawingContext.fillStyle = '#000';
-                    drawingContext.beginPath();
-                    drawingContext.arc(rPixOver8 * dx / dist, rPixOver8 * dy / dist, rPixOver8, 0, TAU);
-                    drawingContext.fill();
+                // Draw Pupil
+                var dx = ball.x - eyeX;
+                var dy = eyeY - ball.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                var rPixOver8 = radiusPix / 8;
+                drawingContext.fillStyle = '#000';
+                drawingContext.beginPath();
+                drawingContext.arc(rPixOver8 * dx / dist, rPixOver8 * dy / dist, rPixOver8, 0, TAU);
+                drawingContext.fill();
 
-                    drawingContext.translate(-eyeXPix, -eyeYPix);
-        }
+                drawingContext.translate(-eyeXPix, -eyeYPix);
             };
         }
 
@@ -435,9 +429,9 @@
             contentDiv.appendChild(canvas);
 
             // Initialize Game Data
-            ball = newBall();
-            leftSlime = newSlime(100, LEFT_SLIME_COLOR, true);
-            rightSlime = newSlime(100, RIGHT_SLIME_COLOR, false);
+            ball = new Ball();
+            leftSlime = new Slime(100, LEFT_SLIME_COLOR, true);
+            rightSlime = new Slime(100, RIGHT_SLIME_COLOR, false);
 
             startRound()
         }
